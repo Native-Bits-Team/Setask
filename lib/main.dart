@@ -37,6 +37,8 @@ class MainApp extends StatelessWidget {
             iconColor: WidgetStatePropertyAll(Colors.white60)))
         ),
       home: installer()
+      //LicensePage(applicationName: "Setask") // see info.dart for more information | Ref #L
+      //installer() 
       //home: 
       
       /*Scaffold(
