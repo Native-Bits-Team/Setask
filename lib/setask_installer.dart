@@ -45,7 +45,7 @@ class installer extends StatelessWidget {
   }))),
           //}, icon: const Icon(Icons.info))
           IconButton(onPressed: (){
-            showLicensePage(context: context, applicationName: "Setask", applicationVersion: "0.1v-preAlpha"); // see NOTE #L below
+            showLicensePage(context: context, applicationName: "Setask", applicationVersion: "0.1v-preAlpha"); // NOTE #L below
            /* return;
             Navigator.push(context, MaterialPageRoute(builder: (context){
               //showLicensePage(context: context);

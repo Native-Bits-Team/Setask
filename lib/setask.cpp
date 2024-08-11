@@ -8,9 +8,15 @@
 int main () {
 
     auto sizeArray = getResourcesLengthArray(1000);
-    writeResource("software.zip", 1001, sizeArray[0]);
+    auto nameArray = getResourcesNameArray(1001);
+
+    for (int i=0; i < nameArray.size(); ++i) {
+        writeResource(nameArray[i].c_str(), 1002+i, sizeArray[i]);
+    }
+
+    /*writeResource("software.zip", 1001, sizeArray[0]);
     writeResource("setup.exe", 1002, sizeArray[1]);
-    writeResource(".dll", 1003, sizeArray[2]);
+    writeResource(".dll", 1003, sizeArray[2]);*/
     
     //std::ifstream IF("../software.zip");
    // std::string t = "";
@@ -89,11 +95,11 @@ void writeResource(const char* name,int resID, int size, std::string path = "./"
     FS.close();
 }
 
-auto getResourcesLengthArray(int resID){ // [T] SEE REFs and other [T] Above
+auto getResourcesLengthArray(int resID){ // [T] SEE REFs and other [T] Above | Modified REF #G
     const int MAX_LENGTH_OF_SIZE_ARRAY = 100;
-    const int MAX_NUMBER_OF_RESOURCES = 10;
+    //const int MAX_NUMBER_OF_RESOURCES = 10;
 
-    wchar_t* sizeArrayString = (wchar_t*) calloc(100, 0);
+    wchar_t* sizeArrayString = (wchar_t*) calloc(MAX_LENGTH_OF_SIZE_ARRAY, 0);
     LoadStringW(GetModuleHandleW(NULL), resID, sizeArrayString,MAX_LENGTH_OF_SIZE_ARRAY);
     std::string n = "";
     //int size[MAX_NUMBER_OF_RESOURCES] = {0};
@@ -109,4 +115,26 @@ auto getResourcesLengthArray(int resID){ // [T] SEE REFs and other [T] Above
         n += sizeArrayString[i];
     }
     return sizeArray;
+}
+
+auto getResourcesNameArray(int resID){ // [T] SEE REFs and other [T] Above | Copy Pasted | Modified #G
+    const int MAX_LENGTH_OF_NAME_ARRAY = 100;
+    //const int MAX_NUMBER_OF_RESOURCES = 10;
+
+    wchar_t* nameArrayString = (wchar_t*) calloc(MAX_LENGTH_OF_NAME_ARRAY, 0);
+    LoadStringW(GetModuleHandleW(NULL), resID, nameArrayString,MAX_LENGTH_OF_NAME_ARRAY);
+    std::string n = "";
+    //int size[MAX_NUMBER_OF_RESOURCES] = {0};
+    std::vector<std::string> nameArray;
+    for (int i=0; i< MAX_LENGTH_OF_NAME_ARRAY; ++i){
+        if (nameArrayString[i] == ','){
+            nameArray.push_back(n);//std::__cxx11::stoi(n));
+            n = "";
+        }
+        if (nameArrayString[i] == '!'){
+            break;
+        }
+        n += nameArrayString[i];
+    }
+    return nameArray;
 }
