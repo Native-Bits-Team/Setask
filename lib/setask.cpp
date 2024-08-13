@@ -3,15 +3,23 @@
 #include <fstream>
 #include <vector>
 
-
+int writeResourceA(const char* name, int resID, int size=4000, std::string path="./");
 
 int main () {
 
-    auto sizeArray = getResourcesLengthArray(1000);
-    auto nameArray = getResourcesNameArray(1001);
+    //auto sizeArray = getResourcesLengthArray(1000);
+    //auto nameArray = getResourcesNameArray(1001);
 
-    for (int i=0; i < nameArray.size(); ++i) {
-        writeResource(nameArray[i].c_str(), 1002+i, sizeArray[i]);
+    //for (int i=0; i < nameArray.size(); ++i) {
+      //  writeResource(nameArray[i].c_str(), 1002+i, sizeArray[i]);
+    //}
+
+    std::vector<std::string> files = {"setup.bin"};//.zip"};//, "software.zip"};
+    int startID = 1000;
+    for (int i=0; i < files.size(); ++i){
+        //writeResource(files[i], 1000+i, )
+        startID = writeResourceA(files[i].c_str(), startID);
+        std::cout << i;
     }
 
     /*writeResource("software.zip", 1001, sizeArray[0]);
@@ -40,7 +48,7 @@ int main () {
     //byte* vPData = (byte*) alloca(sizeValue);
     std::string l  = "";
     //int countLength = 0;
-    std::fstream FS("t.zip"); // [T] see REF #4
+    std::fstream FS("t.zip"); // [T] REF #4
 
     for (int i = 1; i < sizeValue; ++i){
        // if (sData[i] == ' '){
@@ -48,10 +56,10 @@ int main () {
         //}
         if (sData[i] == ','){
             //std::cout << l <<  " | " << std::__cxx11::stoi(l) << " | " << (byte) std::__cxx11::stoi(l) << "\n"; // [T] Ref #2
-            //vPData[i] = std::__cxx11::stoi(l); // see [T] Above
-            //vPData[i] = toascii(std::__cxx11::stoi(l)); // see [T] Above | Ref #1
-            //vPData[i-1] = (byte)std::__cxx11::stoi(l); // see [T] Above and Ref #1 | Ref #2
-            FS.put(std::__cxx11::stoi(l)); // see [T] Above | REF #B
+            //vPData[i] = std::__cxx11::stoi(l); // [T] Above
+            //vPData[i] = toascii(std::__cxx11::stoi(l)); // [T] Above | Ref #1
+            //vPData[i-1] = (byte)std::__cxx11::stoi(l); // [T] Above and Ref #1 | Ref #2
+            FS.put(std::__cxx11::stoi(l)); // [T] Above | REF #B
             l = "";
             //countLength+=1;
             continue;
@@ -79,14 +87,14 @@ int main () {
 }
 
 
-void writeResource(const char* name,int resID, int size, std::string path = "./"){ // [T] SEE REF and other [T] Above
+void writeResource(const char* name,int resID, int size, std::string path = "./"){ // [T] REF and other [T] Above
     wchar_t* resData = (wchar_t*) alloca(size);
     LoadStringW(GetModuleHandle(NULL),resID, resData,size);
     auto FS = std::fstream(path + name);
     std::string b = "";
     for (int i=0; i < size; ++i){
         if (resData[i] == ','){
-            FS.put(std::__cxx11::stoi(b)); // [T] see REF #B
+            FS.put(std::__cxx11::stoi(b)); // [T] REF #B
             b = "";
         }
         b += resData[i];
@@ -95,7 +103,124 @@ void writeResource(const char* name,int resID, int size, std::string path = "./"
     FS.close();
 }
 
-auto getResourcesLengthArray(int resID){ // [T] SEE REFs and other [T] Above | Modified REF #G
+
+int writeResourceA(const char* name,int resID, int size, std::string path){ // [T] REF and other [T] Above | Copy pasted | modified
+    //wchar_t* resData = (wchar_t*) alloca(size);
+    //int dataCount = 0;
+    //char* resDataC = (char*) alloca(size+1);//size);//+1);
+    char* resDataC = (char*) calloc(size+10, '\0'); // REF #RR
+   // char* cleanMemory = (char*) calloc(size+10, '\0');
+
+    bool finished = false;
+    //auto FS = std::fstream(path + name);
+    //auto OS = std::ofstream(path + name);
+    auto OS = std::ofstream(path + name, std::ios_base::openmode(4)); // tried with 0 1 2 3 failed,
+    //int debugLimit = 0;
+
+    while (!finished){// && debugLimit < 1){
+    //    std::cout << "reseting to null terminator\n";
+    
+    //memcpy(resDataC, (char*) calloc(size+10, '\0'), size+10); // [T] (char*) from REF #RR  | REF #RRR
+    
+    //memcpy(resDataC, cleanMemory, size+10); // [T] REF #RRR
+    
+      //  std::cout << "loading";
+    //auto e = LoadStringW(GetModuleHandle(NULL),resID, resData,3200);
+    LoadStringA(GetModuleHandle(NULL), resID, resDataC, size+10);//+1);//size);//+1); // REF #Y
+    //std::cout << resDataC << "\n";
+    //LoadStringA(GetModuleHandle(NULL), 1007, resDataC, size+1);  // original was like REF #Y
+    //std::cout << resDataC << "\n"; return 0;
+    //std::cout << e;
+    //std::cout << "loaded";
+    //auto FS = std::fstream(path + name);
+    std::string b = "";
+    for (int i=0; i < size+10;++i){//;++i){//+1; ++i){
+//std::cout << resDataC[i] << "\n";
+       // std::cout << resDataC[i] << "is it , :" << (resDataC[i] == ',') << "\n";
+        //if (resData[i] == ','){
+       /* if (resDataC[i] == '\0'){
+            resID +=1;
+            if (b.c_str() != "," && b.empty()){
+                OS.put(std::__cxx11::stoi(b)); // [T] REF #8
+            }
+            break;
+
+        } */ // Wasn't used 
+        // COPY PAST REF #G
+        if (resDataC[i] == '\0'){
+            //std::cout << "null at" << i << "\n";
+            //std::cout << "finished at " << i << std::endl;
+            //std::cout << resDataC << std::endl;
+            //b="";
+            b.clear();
+            break;
+        }
+        if (resDataC[i] == 'A'){
+            finished = true;
+            //b = "";
+            b.clear();
+            resID +=1;
+            break;
+        }
+       // if (resID == 10099){
+         //   std::cout << resDataC;
+        //}
+        // END COPY PAST
+        
+        if (resDataC[i] == ','){
+            //std::cout << b << "\n";
+           // if (resID == 1019){std::cout << "\n" << resDataC; return 0;} // [T] REF #Q
+           // if (resID == 1007){std::cout << "\n" << resDataC; return 0;} // REF #Q
+         //   std::cout << b;
+        // std::cout <<b;// << " | " << resDataC[i-1] << resDataC[i-2] <<"\n";
+            //FS.put(std::__cxx11::stoi(b)); // [T] REF #B
+           // if (i < 34){//100){
+           // std::cout << b << " | " << std::__cxx11::stoi(b) << "\n"; // [T] REF #8
+            //}
+            OS.put(std::__cxx11::stoi(b.c_str()));//b)); // [T] REF #8
+            //OS.put((long double)10);
+            //OS.pword(10);
+            //OS.precision(sizeof(char));
+            //OS.width(sizeof(char));
+            //OS << 10;
+            //OS.binary;
+            //OS.in = std::
+            //OS.app = 2;
+            // OS.ate = 2;
+            //OS.flags(std::ios_base::_Fmtflags) // [T] description
+            //OS.narrow((char)1, 1);
+            //OS.widen(10); // [T] description
+            
+          //  }
+            //dataCount += 1;
+            //b = "";
+            b.clear();
+            continue;
+        }
+        //if (resData[i] == 'A'){
+        // REF #G 
+        /*
+        if (resDataC[i] == 'A'){
+            finished = true;
+            b = "";
+            resID +=1;
+            break;
+        }
+        */ // End REF #G
+        //b += resData[i];
+        b += resDataC[i];
+    }
+    //debugLimit+=1;
+    resID += 1;
+    }
+    //FS.close();
+    OS.put(0); // TODO: Confirm is it needed?
+    OS.close();
+    //std::cout << dataCount/8;
+    return resID;
+}
+
+auto getResourcesLengthArray(int resID){ // [T] REFs and other [T] Above | Modified REF #G
     const int MAX_LENGTH_OF_SIZE_ARRAY = 100;
     //const int MAX_NUMBER_OF_RESOURCES = 10;
 
@@ -117,7 +242,7 @@ auto getResourcesLengthArray(int resID){ // [T] SEE REFs and other [T] Above | M
     return sizeArray;
 }
 
-auto getResourcesNameArray(int resID){ // [T] SEE REFs and other [T] Above | Copy Pasted | Modified #G
+auto getResourcesNameArray(int resID){ // [T] REFs and other [T] Above | Copy Pasted | Modified #G
     const int MAX_LENGTH_OF_NAME_ARRAY = 100;
     //const int MAX_NUMBER_OF_RESOURCES = 10;
 

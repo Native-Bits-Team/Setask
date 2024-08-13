@@ -28,7 +28,7 @@ void generateResourceScript(){
 /////
 
 void generateResourceScriptM(List<String> resourcesList, {String path=""}) { // [T] generateResourceScript() above
-  String info = "STRINGTABLES {\n";
+  String info = "STRINGTABLE {\n";
   String rLengths = "1000, \"";
   String rData = "";
   //String rName = "1001, \"";
@@ -37,20 +37,42 @@ void generateResourceScriptM(List<String> resourcesList, {String path=""}) { // 
   for (String resource in resourcesList){
     //rLengths += ',';
     //rName += resource;
+    fileToTextFile(path+resource);
+    continue;
     var rString = File(path+resource).readAsBytesSync().toString().replaceFirst('[', '').replaceFirst(']', '').replaceAll(' ', '');
     rLengths += rString.length.toString();
-    rData += rStartID.toString() + ", \"" + rString + "\"\n";
-    rStartID+=1;
-    rLengths += ','; // Ref #O
+
+    var R = (rString.length/4000.0).ceil();
+    //print(R);
+    //continue;
+    //rString.substring(start)
+    for (int i=0 ; i< R; ++i){
+      print(i);
+      rData += rStartID.toString() + ", \"" + rString.substring((i*4000), (i+1)*4000).toString();
+      rStartID+=1;
+      if (R==(i+1)){
+        rData += "A\"\n";
+        break;
+      } else {
+        rData += "\"\n";
+      }
+    }
+    //print(rString.length/4000.0);
+
+    //rData += rStartID.toString() + ", \"" + rString + "\"\n";
+    //rStartID+=1;
+    //rLengths += ','; // Ref #O
     //rName += ','; // [T] Ref #O
   }
-  rLengths.replaceRange(rLengths.length-1, rLengths.length, 'A'); // 'A' To mark the end of the list 
-  rLengths += "\"\n"; // Ref #P
+  return;
+  //rLengths.replaceRange(rLengths.length-1, rLengths.length, 'A'); // 'A' To mark the end of the list 
+  //rLengths += "\"\n"; // Ref #P
   //rName.replaceRange(rName.length-1, rName.length, 'A'); //
   //rName += "\"\n"; // [T] Ref #P
   //info += rLengths + rData + "}";
   //info += rLengths + rName + rData + "}";
-  info += rLengths + rData + "}";
+  //info += rLengths + rData + "}";
+  info += rData + "}";
   File("software.rc").writeAsStringSync(info);
 }
 
@@ -60,6 +82,10 @@ void runSetaskExec(){
   // runs g++ setask.cpp software.res -o setup.exe
 }
 
+
+void fileToTextFile(String filePath){
+  File(filePath+".txt").writeAsStringSync(File(filePath).readAsBytesSync().toString().replaceFirst('[', '').replaceFirst(']', '').replaceAll(' ', ''));
+}
 
 class GeneratorPanel extends StatelessWidget {
   @override
