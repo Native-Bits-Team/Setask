@@ -1,17 +1,18 @@
+// THIS IS A C version of setask.cpp
 #include <windows.h>
 //#include <iostream>
 //#include <fstream>
-#include <vector>
+//#include <vector>
 
-//#include <ostream>
-#include <fstream>
-//extern "C" { // [E] | this was causing an error
+//extern "C" { // [E]
 #include "dependencies/zip/src/zip.h"
 //}
 
-#include <iostream>
+//#include <iostream>
 
-int writeResourceA(const char* name, int resID, int size=4000, std::string path="./");
+#include <stdio.h>
+
+int writeResourceA(const char* name, int resID, int size);//=4000);//, std::string path="./");
 
 int main () {
     //zip_extract("C:/setup.zip","./",NULL,NULL); // [T] REF ZIP
@@ -37,14 +38,12 @@ int main () {
 */
 
 
-//int startID = 1000;
-//startID = writeResourceA("setup.zip", startID, 4000, "C:/");
-//auto TESTFS = std::basic_fstream("C:/setup.zip", std::ios_base::openmode(3), 40); // [T] DEBUG
-auto TESTFS = std::fstream("C:/setup.zip");
-TESTFS.clear();
-//TESTFS.unsetf();
-//TESTFS.flush();
-TESTFS.close();
+int startID = 1000;
+printf("Start");
+//startID = writeResourceA("./test.zip", startID, 4000);//, "C:/");
+startID = writeResourceA("C:/setup.zip", startID, 4000);
+printf("Finished.");
+
 //auto OS = std::ofstream("C:/setup.zip", std::ios_base::openmode(0));
 //if (OS.is_open()){std::cout << "OPENED!\n";}
 //OS.setstate(std::ios_base::_Iostate::)
@@ -130,13 +129,13 @@ TESTFS.close();
     zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
     //zip_extract(L"C:/setup.zip","./", NULL,NULL); // [T] REF miniz.h => A
     //std::cout << "done extracting.\n";
-    //ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A | TEMP C
+    ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A
   //  }
     return 0;
 }
 
-/* [D]
-void writeResource(const char* name,int resID, int size, std::string path = "./"){ // [T] REF and other [T] Above
+/*
+void writeResource(const char* name,int resID, int size){//, std::string path = "./"){ // [T] REF and other [T] Above
     wchar_t* resData = (wchar_t*) alloca(size);
     LoadStringW(GetModuleHandle(NULL),resID, resData,size);
     auto FS = std::fstream(path + name);
@@ -153,7 +152,7 @@ void writeResource(const char* name,int resID, int size, std::string path = "./"
 }
 */
 
-int writeResourceA(const char* name,int resID, int size, std::string path){ // [T] REF and other [T] Above | Copy pasted | modified
+int writeResourceA(const char* name,int resID, int size){//, std::string path){ // [T] REF and other [T] Above | Copy pasted | modified
     //wchar_t* resData = (wchar_t*) alloca(size);
     //int dataCount = 0;
     //char* resDataC = (char*) alloca(size+1);//size);//+1); // REF #R2
@@ -161,11 +160,19 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
     //char* resDataC = (char*) alloca(size+10); // [T] REF #RR | REF #R2
    // char* cleanMemory = (char*) calloc(size+10, '\0');
 
-    bool finished = false;
+    //bool
+    BOOL finished = 0;//false;
     //auto FS = std::fstream(path + name);
     //auto OS = std::ofstream(path + name);
     //auto OS = std::ofstream(path + name, std::ios_base::openmode(4)); // tried with 0 1 2 3 failed | 4 works, 5 gives larger file
-    auto OS = std::ofstream(path + name, std::ios_base::openmode(4));//, 40);//_SH_DENYNO); // [T] ABOVE | [T] Description of _SH_DENYNO
+    //ReadFile(gethandle)
+    //fread()
+    //FILE* f =fopen(name, "read");
+    //FILE* f = fopen(name,"read");
+    FILE* f = fopen(name, "wb");
+    //FILE* f = fopen(name, "");
+    //fwrite
+    //FILE e()
     //int debugLimit = 0;
 
     while (!finished){// && debugLimit < 1){
@@ -184,7 +191,8 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
     //std::cout << e;
     //std::cout << "loaded";
     //auto FS = std::fstream(path + name);
-    std::string b = "";
+    //std::string b = "";
+    char b[3] = "\0\0\0";
     for (int i=0; i < size+10;++i){//;++i){//+1; ++i){
 //std::cout << resDataC[i] << "\n";
        // std::cout << resDataC[i] << "is it , :" << (resDataC[i] == ',') << "\n";
@@ -197,19 +205,26 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
             break;
 
         } */ // Wasn't used 
+        //printf("test");
         // COPY PAST REF #G
         if (resDataC[i] == '\0'){
             //std::cout << "null at" << i << "\n";
             //std::cout << "finished at " << i << std::endl;
             //std::cout << resDataC << std::endl;
             //b="";
-            b.clear();
+            //b.clear();
+            b[0] = '\0';
+            b[1] = '\0';
+            b[2] = '\0';
             break;
         }
         if (resDataC[i] == 'A'){
-            finished = true;
+            finished = 1;//true;
             //b = "";
-            b.clear();
+            //b.clear();
+            b[0] = '\0';
+            b[1] = '\0';
+            b[2] = '\0';
             resID +=1;
             break;
         }
@@ -219,6 +234,7 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
         // END COPY PAST
         
         if (resDataC[i] == ','){
+           // printf("r");
             //std::cout << b << "\n";
            // if (resID == 1019){std::cout << "\n" << resDataC; return 0;} // [T] REF #Q
            // if (resID == 1007){std::cout << "\n" << resDataC; return 0;} // REF #Q
@@ -228,7 +244,60 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
            // if (i < 34){//100){
            // std::cout << b << " | " << std::__cxx11::stoi(b) << "\n"; // [T] REF #8
             //}
-            OS.put(std::__cxx11::stoi(b.c_str()));//b)); // [T] REF #8
+            //OS.put(std::__cxx11::stoi(b.c_str()));//b)); // [T] REF #8
+            //int c = 0;
+            for (int k=0; k < 3; ++k){
+                if (b[k] == '\0'){
+                    b[k] = '0';
+                    //break;
+                }// else {
+                   // c+=1;
+                //}
+            }
+            //char t[c];
+     //       for (int k=0; k < c; ++k){
+
+       //     }
+
+           /*
+            for (int k =0; k < 3; ++k){
+                if (b[k] == '\0'){
+                    break;
+                }
+                if (k == 0){
+                    c = b[0];
+                    
+                    printf("first: %c\n", b[0]);
+                }
+                if (k == 1){
+                    c += b[1]*10;
+                    printf("second: %c\n",b[1]);
+                }
+                if (k == 2){
+                    c += b[2]*100;
+                    printf("third: %c\n", b[2]);
+                }
+            }
+            */
+           //strcat(&c, "%i" ,b);
+           //strcpy()
+           //scanf
+           //stoi(b);
+            //printf(" | %i | ",stoi(b));
+            //printf(" | %i | ", atoi(b));
+            //printf(" | ");
+            //printf(b);
+            //fputc(c, f);
+            //fputc(stoi(b), f);
+            //fputc(atoi(c),f);
+            //fputwc(atoi(b),f);
+            //fputchar(atio(b));
+            //_fputc_nolock(atoi(b),f);
+            //fputc(atoi(b),f);
+            //fwprintf(f, L"%i",atoi(b));
+            //fprintf(f, "%p", atoi(b));
+            fputc(atoi(b),f);
+            //fputc(atoi(b), f);
             //OS.put((long double)10);
             //OS.pword(10);
             //OS.precision(sizeof(char));
@@ -245,7 +314,10 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
           //  }
             //dataCount += 1;
             //b = "";
-            b.clear();
+            //b.clear();
+            b[0] = '\0';
+            b[1] = '\0';
+            b[2] = '\0';
             continue;
         }
         //if (resData[i] == 'A'){
@@ -259,14 +331,29 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
         }
         */ // End REF #G
         //b += resData[i];
-        b += resDataC[i];
+        //b += resDataC[i];
+        for (int k =0; k < 3; ++k){
+            if (b[0] == '\0'){
+                b[0] = resDataC[i];
+                break;
+            }
+            if (b[1] == '\0'){
+                b[1] = resDataC[i];
+                break;
+            }
+            if (b[2] == '\0'){
+                b[2] = resDataC[i];
+                break;
+            }
+        }
     }
     //debugLimit+=1;
     resID += 1;
     }
     //FS.close();
-    OS.put(0); // TODO: Confirm is it needed? | failed to fix zip_extract by commenting it
+    //OS.put(0); // TODO: Confirm is it needed? | failed to fix zip_extract by commenting it
     //OS.clear();
+    fputc(0,f);
     free(resDataC);
 
     //if (name == "setup.zip"){
@@ -275,19 +362,19 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
 
     //std::cout << OS.good() << " | \n";
     //OS.clear(std::ios_base::iostate(2)); // [T] REF #CLEAR | REF #CC
-    //OS.un
-    
-    OS.clear(std::ios_base::iostate(2)); // [T] REF #CC | TEMP C
-    OS.close(); // TEMP C
-    
+    //OS.clear(std::ios_base::iostate(2)); // [T] REF #CC
+    //OS.close();
     //if (OS.is_open()){
     //    std::cout << "Still open\n";
     //}
     //free(&OS);
     //std::cout << dataCount/8;
+    fclose(f);
     return resID;
 }
+
 /*
+
 auto getResourcesLengthArray(int resID){ // [T] REFs and other [T] Above | Modified REF #G
     const int MAX_LENGTH_OF_SIZE_ARRAY = 100;
     //const int MAX_NUMBER_OF_RESOURCES = 10;
@@ -331,4 +418,5 @@ auto getResourcesNameArray(int resID){ // [T] REFs and other [T] Above | Copy Pa
     }
     return nameArray;
 }
+
 */

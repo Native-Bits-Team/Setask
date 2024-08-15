@@ -48,3 +48,6 @@ test_folder
 *.rc
 *.res
 .vscode
+*.zip
+*.o
+*.bin

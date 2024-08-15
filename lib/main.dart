@@ -37,7 +37,7 @@ class MainApp extends StatelessWidget {
             textStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             iconColor: WidgetStatePropertyAll(Colors.white60)))
         ),
-      home: GeneratorPanel()
+      home: installer()//GeneratorPanel()
       //LicensePage(applicationName: "Setask") // see info.dart for more information | Ref #L
       //installer() 
       //home: 

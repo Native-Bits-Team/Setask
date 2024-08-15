@@ -4959,8 +4959,8 @@ extern "C" {
 #endif
 #include <windows.h>
 
-static WCHAR *mz_utf8z_to_widechar(const char *str) {
-  int reqChars = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0);
+static WCHAR *mz_utf8z_to_widechar(const char *str) { // [T] REF #miniz.h => A
+  int reqChars = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0); //
   WCHAR *wStr = (WCHAR *)malloc(reqChars * sizeof(WCHAR));
   MultiByteToWideChar(CP_UTF8, 0, str, -1, wStr, reqChars);
   return wStr;
@@ -4968,7 +4968,8 @@ static WCHAR *mz_utf8z_to_widechar(const char *str) {
 
 static FILE *mz_fopen(const char *pFilename, const char *pMode) {
   WCHAR *wFilename = mz_utf8z_to_widechar(pFilename);
-  WCHAR *wMode = mz_utf8z_to_widechar(pMode);
+  WCHAR *wMode = mz_utf8z_to_widechar(pMode); // NBT | [C | UN C] | UN C
+  //WCHAR *wMode = L"rb"; // NBT
   FILE *pFile = NULL;
 #ifdef ZIP_ENABLE_SHARABLE_FILE_OPEN
   pFile = _wfopen(wFilename, wMode);
@@ -4976,7 +4977,7 @@ static FILE *mz_fopen(const char *pFilename, const char *pMode) {
   errno_t err = _wfopen_s(&pFile, wFilename, wMode);
 #endif
   free(wFilename);
-  free(wMode);
+  free(wMode); // NBT [C UN C] | UN C
 #ifdef ZIP_ENABLE_SHARABLE_FILE_OPEN
   return pFile;
 #else
@@ -5321,9 +5322,10 @@ static mz_bool mz_zip_array_ensure_capacity(mz_zip_archive *pZip,
     while (new_capacity < min_new_capacity)
       new_capacity *= 2;
   }
-  if (NULL == (pNew_p = pZip->m_pRealloc(pZip->m_pAlloc_opaque, pArray->m_p,
-                                         pArray->m_element_size, new_capacity)))
-    return MZ_FALSE;
+  if (NULL == (pNew_p = pZip->m_pRealloc(pZip->m_pAlloc_opaque, pArray->m_p, // NBT | [C UN C] | UN C
+                                         pArray->m_element_size, new_capacity))) //
+    return MZ_FALSE; //
+  //pZip->m_pAlloc_opaque = miniz_def_realloc_func(pZip->m_pAlloc_opaque, pArray->m_p, pArray->m_element_size, new_capacity); // NBT
   pArray->m_p = pNew_p;
   pArray->m_capacity = new_capacity;
   return MZ_TRUE;
@@ -5373,7 +5375,7 @@ static MZ_FORCEINLINE mz_bool mz_zip_array_push_back(mz_zip_archive *pZip,
 
 #ifndef MINIZ_NO_TIME
 static MZ_TIME_T mz_zip_dos_to_time_t(int dos_time, int dos_date) {
-  struct tm tm;
+  struct tm tm; // /* NBT | REF #MINIZ1 | uncommented
   memset(&tm, 0, sizeof(tm));
   tm.tm_isdst = -1;
   tm.tm_year = ((dos_date >> 9) & 127) + 1980 - 1900;
@@ -5383,6 +5385,21 @@ static MZ_TIME_T mz_zip_dos_to_time_t(int dos_time, int dos_date) {
   tm.tm_min = (dos_time >> 5) & 63;
   tm.tm_sec = (dos_time << 1) & 62;
   return mktime(&tm);
+   // */ //NBT | uncommented
+   /*
+  // NBT START | [T] REF #MINIZ1
+  //auto* tm = (auto*) alloc(sizeof(tm));
+  struct tm* tm = (struct tm*) calloc(sizeof(tm), 0);
+  tm->tm_isdst = -1;
+  tm->tm_year = ((dos_date >> 9) & 127) + 1980 - 1900;
+  tm->tm_mon = ((dos_date >> 5) & 15) - 1;
+  tm->tm_mday = dos_date & 31;
+  tm->tm_hour = (dos_time >> 11) & 31;
+  tm->tm_min = (dos_time >> 5) & 63;
+  tm->tm_sec = (dos_time << 1) & 62;
+  return mktime(tm);
+  */
+  // NBT END
 }
 
 #ifndef MINIZ_NO_ARCHIVE_WRITING_APIS
@@ -5464,10 +5481,11 @@ static mz_bool mz_zip_reader_init_internal(mz_zip_archive *pZip,
   pZip->m_total_files = 0;
   pZip->m_last_error = MZ_ZIP_NO_ERROR;
 
-  if (NULL == (pZip->m_pState = (mz_zip_internal_state *)pZip->m_pAlloc(
-                   pZip->m_pAlloc_opaque, 1, sizeof(mz_zip_internal_state))))
-    return mz_zip_set_error(pZip, MZ_ZIP_ALLOC_FAILED);
-
+  if (NULL == (pZip->m_pState = (mz_zip_internal_state *)pZip->m_pAlloc( // NBT | [C | UN C] | C | UN C
+                   pZip->m_pAlloc_opaque, 1, sizeof(mz_zip_internal_state)))) // NBT [C | UN C] | C | UN C
+  //if (NULL == (pZip->m_pState = (mz_zip_internal_state*) calloc(sizeof(mz_zip_internal_state), pZip->m_pAlloc_opaque)))//(pZip->m_pAlloc_opaque, 1))) // NBT
+  //  return mz_zip_set_error(pZip, MZ_ZIP_ALLOC_FAILED); // NBT
+  //pZip->m_pState = (mz_zip_internal_state *) malloc(sizeof(mz_zip_internal_state));//miniz_def_alloc_func(pZip->m_pAlloc_opaque, 1, sizeof(mz_zip_internal_state)); // NBT
   memset(pZip->m_pState, 0, sizeof(mz_zip_internal_state));
   MZ_ZIP_ARRAY_SET_ELEMENT_SIZE(&pZip->m_pState->m_central_dir,
                                 sizeof(mz_uint8));
