@@ -5,7 +5,7 @@
 //#include <vector>
 
 //extern "C" { // [E]
-#include "dependencies/zip/src/zip.h"
+//#include "dependencies/zip/src/zip.h"
 //}
 
 //#include <iostream>
@@ -126,7 +126,7 @@ printf("Finished.");
   //      zip_cstrea
   //  }
     //zip_extract("C:/setup_t.zip", "./", NULL, NULL); // REF #ZIP
-    zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
+   // zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
     //zip_extract(L"C:/setup.zip","./", NULL,NULL); // [T] REF miniz.h => A
     //std::cout << "done extracting.\n";
    

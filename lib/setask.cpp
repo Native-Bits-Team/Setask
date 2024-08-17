@@ -9,7 +9,7 @@
 //#include "dependencies/zip/src/zip.h"
 //}
 
-#include "dependencies/zip/src/zip.h"
+//#include "dependencies/zip/src/zip.h"
 
 #include <iostream>
 
@@ -170,7 +170,7 @@ int main () {
     std::cout << "finished\n"; // [T] REF #F
     //zip_open()
 
-    zip_extract("C:/setup.zip", "./", NULL, NULL);
+    //zip_extract("C:/setup.zip", "./", NULL, NULL);
     
     //ziputils::unzipper::open("C:/setup.zip");
     
