@@ -2001,7 +2001,7 @@ MINIZ_EXPORT void miniz_def_free_func(void *opaque, void *address) {
 MINIZ_EXPORT void *miniz_def_realloc_func(void *opaque, void *address,
                                           size_t items, size_t size) {
   (void)opaque, (void)address, (void)items, (void)size;
-  return MZ_REALLOC(address, items * size);
+  return MZ_REALLOC(address, items * size); // REF #MZ
 }
 
 const char *mz_version(void) { return MZ_VERSION; }
@@ -4961,7 +4961,10 @@ extern "C" {
 
 static WCHAR *mz_utf8z_to_widechar(const char *str) { // [T] REF #miniz.h => A
   int reqChars = MultiByteToWideChar(CP_UTF8, 0, str, -1, NULL, 0); //
-  WCHAR *wStr = (WCHAR *)malloc(reqChars * sizeof(WCHAR));
+  printf("%i",sizeof(WCHAR)); // NBT
+  WCHAR *wStr = (WCHAR *)malloc(reqChars * sizeof(WCHAR)); // [C] | [UN C]
+  //WCHAR *wStr = (WCHAR *)calloc(reqChars * sizeof(WCHAR),0); // NBT | [T] ABOVE
+  printf("Done");
   MultiByteToWideChar(CP_UTF8, 0, str, -1, wStr, reqChars);
   return wStr;
 }
@@ -5308,11 +5311,11 @@ static MZ_FORCEINLINE void mz_zip_array_clear(mz_zip_archive *pZip,
   memset(pArray, 0, sizeof(mz_zip_array));
 }
 
-static mz_bool mz_zip_array_ensure_capacity(mz_zip_archive *pZip,
+static mz_bool mz_zip_array_ensure_capacity(mz_zip_archive *pZip,//&pZip,//*pZip, // NBT
                                             mz_zip_array *pArray,
                                             size_t min_new_capacity,
                                             mz_uint growing) {
-  void *pNew_p;
+  //void *pNew_p; // NBT | C
   size_t new_capacity = min_new_capacity;
   MZ_ASSERT(pArray->m_element_size);
   if (pArray->m_capacity >= min_new_capacity)
@@ -5322,8 +5325,14 @@ static mz_bool mz_zip_array_ensure_capacity(mz_zip_archive *pZip,
     while (new_capacity < min_new_capacity)
       new_capacity *= 2;
   }
-  if (NULL == (pNew_p = pZip->m_pRealloc(pZip->m_pAlloc_opaque, pArray->m_p, // NBT | [C UN C] | UN C
-                                         pArray->m_element_size, new_capacity))) //
+  printf(pZip);
+  //void* pNew_p = pZip->m_pRealloc(pZip->m_pAlloc_opaque, pArray->m_p, pArray->m_element_size, new_capacity); // NBT
+  //void* pNew_p = miniz_def_realloc_func(pZip->m_pAlloc_opaque, pArray->m_p, pArray->m_element_size, new_capacity); // NBT
+  //void* pNew_p = MZ_REALLOC(pArray->m_p, pArray->m_element_size* new_capacity); // NBT | [T] REF #MZ
+  void *pNew_p = malloc(new_capacity*pArray->m_element_size);
+  //if (NULL == (pNew_p = pZip->m_pRealloc(pZip->m_pAlloc_opaque, pArray->m_p, // NBT | [C UN C] | UN C | C
+    //                                     pArray->m_element_size, new_capacity))) //
+    if (pNew_p == NULL) // NBT
     return MZ_FALSE; //
   //pZip->m_pAlloc_opaque = miniz_def_realloc_func(pZip->m_pAlloc_opaque, pArray->m_p, pArray->m_element_size, new_capacity); // NBT
   pArray->m_p = pNew_p;
@@ -5481,8 +5490,9 @@ static mz_bool mz_zip_reader_init_internal(mz_zip_archive *pZip,
   pZip->m_total_files = 0;
   pZip->m_last_error = MZ_ZIP_NO_ERROR;
 
-  if (NULL == (pZip->m_pState = (mz_zip_internal_state *)pZip->m_pAlloc( // NBT | [C | UN C] | C | UN C
-                   pZip->m_pAlloc_opaque, 1, sizeof(mz_zip_internal_state)))) // NBT [C | UN C] | C | UN C
+pZip->m_pState = (mz_zip_internal_state *) malloc(sizeof(mz_zip_internal_state));
+  //if (NULL == (pZip->m_pState = (mz_zip_internal_state *)pZip->m_pAlloc( // NBT | [C | UN C] | C | UN C | C
+    //               pZip->m_pAlloc_opaque, 1, sizeof(mz_zip_internal_state)))) // NBT [C | UN C] | C | UN C | C
   //if (NULL == (pZip->m_pState = (mz_zip_internal_state*) calloc(sizeof(mz_zip_internal_state), pZip->m_pAlloc_opaque)))//(pZip->m_pAlloc_opaque, 1))) // NBT
   //  return mz_zip_set_error(pZip, MZ_ZIP_ALLOC_FAILED); // NBT
   //pZip->m_pState = (mz_zip_internal_state *) malloc(sizeof(mz_zip_internal_state));//miniz_def_alloc_func(pZip->m_pAlloc_opaque, 1, sizeof(mz_zip_internal_state)); // NBT

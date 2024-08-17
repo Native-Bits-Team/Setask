@@ -129,7 +129,8 @@ printf("Finished.");
     zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
     //zip_extract(L"C:/setup.zip","./", NULL,NULL); // [T] REF miniz.h => A
     //std::cout << "done extracting.\n";
-    ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A
+   
+   // ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A | TEMP C
   //  }
     return 0;
 }
@@ -169,7 +170,12 @@ int writeResourceA(const char* name,int resID, int size){//, std::string path){ 
     //fread()
     //FILE* f =fopen(name, "read");
     //FILE* f = fopen(name,"read");
-    FILE* f = fopen(name, "wb");
+    //FILE* f = fopen(name, "wb");
+    //FILE* f = fopen_s()
+    FILE f;
+    FILE* fr = &f;
+    fopen_s(&fr,name, "wb"); // clang suggestion
+    printf("opened");
     //FILE* f = fopen(name, "");
     //fwrite
     //FILE e()
@@ -185,6 +191,7 @@ int writeResourceA(const char* name,int resID, int size){//, std::string path){ 
       //  std::cout << "loading";
     //auto e = LoadStringW(GetModuleHandle(NULL),resID, resData,3200);
     LoadStringA(GetModuleHandle(NULL), resID, resDataC, size+10);//+1);//size);//+1); // REF #Y
+    //printf("string loaded");
     //std::cout << resDataC << "\n";
     //LoadStringA(GetModuleHandle(NULL), 1007, resDataC, size+1);  // original was like REF #Y
     //std::cout << resDataC << "\n"; return 0;
@@ -246,14 +253,43 @@ int writeResourceA(const char* name,int resID, int size){//, std::string path){ 
             //}
             //OS.put(std::__cxx11::stoi(b.c_str()));//b)); // [T] REF #8
             //int c = 0;
-            for (int k=0; k < 3; ++k){
-                if (b[k] == '\0'){
-                    b[k] = '0';
+
+            //if (b[1] == '\0' && b[0] != '\0'){
+
+            //}
+
+            //for (int k = 0; k < 3; ++k){
+
+            //}
+
+
+            //char* s;
+            //char* s_ptr;
+         /*   char s_ptr;
+           // for (int k = 0; k < 3; ++k){
+                if (b[2] == '\0'){
+                    //char s[2] = (char*)b[0,1];// + b[1];
+                    s_ptr = b[0,1];//s;
+                   // break
+                }
+                if (b[1] == '\0'){
+                    //char s[1] = (char*)b[0];
+                    s_ptr = b[0];//s;
+                }
+                if (b[2] != '\0'){
+                    //char s[3] = b;
+                    s_ptr = b[0,2];//s;
+                }
+            //}
+*/
+          //  for (int k=0; k < 3; ++k){
+          //      if (b[k] == '\0'){
+          //          b[k] = '0';
                     //break;
-                }// else {
+      //          }// else {
                    // c+=1;
                 //}
-            }
+        //    }
             //char t[c];
      //       for (int k=0; k < c; ++k){
 
@@ -296,7 +332,14 @@ int writeResourceA(const char* name,int resID, int size){//, std::string path){ 
             //fputc(atoi(b),f);
             //fwprintf(f, L"%i",atoi(b));
             //fprintf(f, "%p", atoi(b));
-            fputc(atoi(b),f);
+            
+            //printf(" | %s |", b);
+            //printf("write one");
+            //printf(fr);
+            fputc(atoi(b),fr);//&f);//f);
+            //printf(b);
+            //printf("done");
+            //free(s_ptr);
             //fputc(atoi(b), f);
             //OS.put((long double)10);
             //OS.pword(10);
@@ -353,7 +396,7 @@ int writeResourceA(const char* name,int resID, int size){//, std::string path){ 
     //FS.close();
     //OS.put(0); // TODO: Confirm is it needed? | failed to fix zip_extract by commenting it
     //OS.clear();
-    fputc(0,f);
+    fputc(0,fr);//&f);//f);
     free(resDataC);
 
     //if (name == "setup.zip"){
@@ -369,7 +412,10 @@ int writeResourceA(const char* name,int resID, int size){//, std::string path){ 
     //}
     //free(&OS);
     //std::cout << dataCount/8;
-    fclose(f);
+    fclose(fr);//&f);//f);
+
+    //free(f);
+
     return resID;
 }
 

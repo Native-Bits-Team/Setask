@@ -6,10 +6,19 @@
 //#include <ostream>
 #include <fstream>
 //extern "C" { // [E] | this was causing an error
-#include "dependencies/zip/src/zip.h"
+//#include "dependencies/zip/src/zip.h"
 //}
 
+#include "dependencies/zip/src/zip.h"
+
 #include <iostream>
+
+//#include "dependencies/miniz-cpp/zip_file.hpp";
+//#include "dependencies/11Zip/include/elzip/elzip.hpp";
+//#include "debugapi.h" //included by mistake
+//#include "dependencies/11Zip/include/elzip/unzipper.hpp";
+//#include "dependencies/11Zip/include/elzip/fswrapper.hpp";
+//#include "dependencies/11Zip/include/elzip/zipper.hpp";
 
 int writeResourceA(const char* name, int resID, int size=4000, std::string path="./");
 
@@ -37,14 +46,23 @@ int main () {
 */
 
 
-//int startID = 1000;
-//startID = writeResourceA("setup.zip", startID, 4000, "C:/");
+//int startID = 1000; // REF #1000
+//startID = writeResourceA("setup.zip", startID, 4000, "C:/"); // REF #1000
 //auto TESTFS = std::basic_fstream("C:/setup.zip", std::ios_base::openmode(3), 40); // [T] DEBUG
-auto TESTFS = std::fstream("C:/setup.zip");
-TESTFS.clear();
+//auto TESTFS = std::fstream("C:/setup.zip");
+//auto TESTFS = std::fstream();
+//TESTFS.open("C:/setup.zip");
+//TESTFS.clear();
 //TESTFS.unsetf();
 //TESTFS.flush();
-TESTFS.close();
+//TESTFS.close();
+//TESTFS = NULL;
+//TESTFS.open("C:/setup_t.zip");
+//TESTFS.close();
+//TESTFS.setf()
+//TESTFS.clear();
+//TESTFS.setstate(std::ios_base::iostate(2));
+//TESTFS.close();
 //auto OS = std::ofstream("C:/setup.zip", std::ios_base::openmode(0));
 //if (OS.is_open()){std::cout << "OPENED!\n";}
 //OS.setstate(std::ios_base::_Iostate::)
@@ -127,10 +145,43 @@ TESTFS.close();
   //      zip_cstrea
   //  }
     //zip_extract("C:/setup_t.zip", "./", NULL, NULL); // REF #ZIP
-    zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
+
+    int startID = 1000; // [T] REF #1000
+    //startID = writeResourceA("setup_t.zip", startID, 4000, "C:/"); // [T] REF #1000
+    startID = writeResourceA("setup.zip", startID, 4000, "C:/"); // 
+
+
+//extern "C"{
+   // zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
+//}
     //zip_extract(L"C:/setup.zip","./", NULL,NULL); // [T] REF miniz.h => A
     //std::cout << "done extracting.\n";
-    //ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A | TEMP C
+
+
+    //waitforde
+    //std::cout << "START\n";
+    //WaitForInputIdle(GetProcessHeap(),10000);
+    //std::cout << "Finished\n"; // REF #F
+   // mz_zip_archive z;
+   // mz_zip_reader_extract_to_callback()
+
+    std::cout << "start\n";
+    Sleep(10000);
+    std::cout << "finished\n"; // [T] REF #F
+    //zip_open()
+
+    zip_extract("C:/setup.zip", "./", NULL, NULL);
+    
+    //ziputils::unzipper::open("C:/setup.zip");
+    
+    //auto unzip = ziputils::unzipper();
+    //unzip.open("C:/setup.zip");
+    //std::cout << unzip.dump();
+    
+    //ziputils::unzipper::
+    //unzip.
+    //ziputils::zipper::
+    ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A | TEMP C
   //  }
     return 0;
 }
@@ -165,7 +216,12 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
     //auto FS = std::fstream(path + name);
     //auto OS = std::ofstream(path + name);
     //auto OS = std::ofstream(path + name, std::ios_base::openmode(4)); // tried with 0 1 2 3 failed | 4 works, 5 gives larger file
-    auto OS = std::ofstream(path + name, std::ios_base::openmode(4));//, 40);//_SH_DENYNO); // [T] ABOVE | [T] Description of _SH_DENYNO
+    //auto OS = std::ofstream(path + name, std::ios_base::openmode(4));//, 40);//_SH_DENYNO); // [T] ABOVE | [T] Description of _SH_DENYNO
+    
+    //auto OS = std::ofstream();
+    //auto OS = std::fstream(); // should be named FS, named OS so no changes needed 
+    auto OS = std::ofstream();
+    OS.open(path+name, std::ios_base::openmode(4));//, 40); // [T] ABOVE
     //int debugLimit = 0;
 
     while (!finished){// && debugLimit < 1){
@@ -277,9 +333,31 @@ int writeResourceA(const char* name,int resID, int size, std::string path){ // [
     //OS.clear(std::ios_base::iostate(2)); // [T] REF #CLEAR | REF #CC
     //OS.un
     
-    OS.clear(std::ios_base::iostate(2)); // [T] REF #CC | TEMP C
-    OS.close(); // TEMP C
+    //OS.clear(std::ios_base::iostate(2)); // [T] REF #CC | TEMP C | C
     
+    
+    //OS.clear();
+    
+    
+    OS.close(); // TEMP C
+
+/* [T] TESTFS
+    auto FS = std::fstream();//("C:/setup.zip");
+    FS.open("C:/setup.zip");
+    if(FS.is_open()){std::cout<< "OPENED";}
+    FS.clear();
+    FS.close();
+    FS.open("ts");
+    FS.clear();
+    FS.close();
+*/
+    //OS.open("t"); // [T] TESTFS
+    //OS.clear(); //
+    //OS.close(); //
+    
+    //OS.open("t"); // [T] TESTFS
+    //OS.close(); //
+
     //if (OS.is_open()){
     //    std::cout << "Still open\n";
     //}

@@ -51,3 +51,5 @@ test_folder
 *.zip
 *.o
 *.bin
+*.pdb
+*.ilk
