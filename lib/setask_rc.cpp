@@ -4,6 +4,17 @@
 #include <string>
 #include <vector>
 
+
+#include <direct.h>
+#include <sys/stat.h>
+#include <conio.h>
+
+//#include <windows.h>
+//#include <direct.h>
+//#include <direct.h>
+//#include <dre
+
+
 /*
 int main() {
     int c = 0;
@@ -172,6 +183,21 @@ void listByteToResourceString(std::vector<std::string> files){
 
 
 int main() {
+
+    struct direct *subDirectory;
+    struct stat * info;
+
+    auto mainDirectory = opendir("./software");
+    
+    if (mainDirectory != NULL){
+        //readdir()
+    }
+
+   // struct directory* dr;
+
+    //read();
+//readir();
+//DIR* d;
     //listByteToResourceString({"../test_folder/setup.zip.txt", "../test_folder/software.zip.txt"});
     listByteToResourceString({"../test_folder/setup.zip.txt"});
     return 0;

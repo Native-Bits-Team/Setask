@@ -12,9 +12,9 @@
 
 #include <stdio.h>
 
-int writeResourceA(const char* name, int resID, int size);//=4000);//, std::string path="./");
+//int writeResourceA(const char* name, int resID, int size);//=4000);//, std::string path="./");
 
-int main () {
+//int main () {
     //zip_extract("C:/setup.zip","./",NULL,NULL); // [T] REF ZIP
     //return 0;
     //auto sizeArray = getResourcesLengthArray(1000);
@@ -36,14 +36,14 @@ int main () {
     }
     files.clear();
 */
-
+/*
 
 int startID = 1000;
 printf("Start");
 //startID = writeResourceA("./test.zip", startID, 4000);//, "C:/");
 startID = writeResourceA("C:/setup.zip", startID, 4000);
 printf("Finished.");
-
+*/
 //auto OS = std::ofstream("C:/setup.zip", std::ios_base::openmode(0));
 //if (OS.is_open()){std::cout << "OPENED!\n";}
 //OS.setstate(std::ios_base::_Iostate::)
@@ -132,8 +132,8 @@ printf("Finished.");
    
    // ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A | TEMP C
   //  }
-    return 0;
-}
+//    return 0;
+//}
 
 /*
 void writeResource(const char* name,int resID, int size){//, std::string path = "./"){ // [T] REF and other [T] Above
@@ -466,3 +466,8 @@ auto getResourcesNameArray(int resID){ // [T] REFs and other [T] Above | Copy Pa
 }
 
 */
+
+
+int main() {
+    return 0;
+}

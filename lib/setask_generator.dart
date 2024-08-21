@@ -26,7 +26,7 @@ void generateResourceScript(){
   File("lib/software.rc").writeAsStringSync(data);
 }*/
 /////
-
+/*
 void generateResourceScriptM(List<String> resourcesList, {String path=""}) { // [T] generateResourceScript() above
   String info = "STRINGTABLE {\n";
   String rLengths = "1000, \"";
@@ -75,7 +75,7 @@ void generateResourceScriptM(List<String> resourcesList, {String path=""}) { // 
   info += rData + "}";
   File("software.rc").writeAsStringSync(info);
 }
-
+*/
 
 void runSetaskExec(){
   // runs windres.exe software.rc -o software.res -O coff
@@ -106,7 +106,7 @@ class GeneratorPanel extends StatelessWidget {
         });
         */
         //generateResourceScriptM(rPathList);
-        generateResourceScriptM(["software.zip", "setup.zip"], path: "test_folder/");
+        //generateResourceScriptM(["software.zip", "setup.zip"], path: "test_folder/");
         runSetaskExec();
       }, label: const Text("Generate"))),
       IconButton(onPressed: (){

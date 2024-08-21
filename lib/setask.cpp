@@ -146,10 +146,10 @@ int main () {
   //  }
     //zip_extract("C:/setup_t.zip", "./", NULL, NULL); // REF #ZIP
 
-    int startID = 1000; // [T] REF #1000
-    //startID = writeResourceA("setup_t.zip", startID, 4000, "C:/"); // [T] REF #1000
-    startID = writeResourceA("setup.zip", startID, 4000, "C:/"); // 
-
+    //int startID = 1000; // [T] REF #1000 | REF #L
+    //startID = writeResourceA("setup_t.zip", startID, 4000, "C:/"); // [T] REF #1000 | REF #L
+    //startID = writeResourceA("setup.zip", startID, 4000, "C:/"); // 
+    
 
 //extern "C"{
    // zip_extract("C:/setup.zip", "./", NULL, NULL); // [T] REF #ZIP | C:/setup_t.zip was tested
@@ -165,9 +165,9 @@ int main () {
    // mz_zip_archive z;
    // mz_zip_reader_extract_to_callback()
 
-    std::cout << "start\n";
-    Sleep(10000);
-    std::cout << "finished\n"; // [T] REF #F
+    //std::cout << "start\n";
+    //Sleep(10000);
+    //std::cout << "finished\n"; // [T] REF #F
     //zip_open()
 
     //zip_extract("C:/setup.zip", "./", NULL, NULL);
@@ -181,6 +181,12 @@ int main () {
     //ziputils::unzipper::
     //unzip.
     //ziputils::zipper::
+
+
+
+    int startID = 1000; // [T] REF #L
+    startID = writeResourceA("setup.exe", startID, 4000, "C:/"); // [T] REF #L
+
     ShellExecuteW(NULL,NULL,L"setup.exe",NULL,NULL,SW_SHOW); // [T] REF #A | TEMP C
   //  }
     return 0;
