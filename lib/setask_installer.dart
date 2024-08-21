@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
-import 'package:setask/info.dart';
 
-void install(String path) { // origin was main.dart
+void install(String path) {
   Directory(path).createSync(recursive: true);
   var zipD = ZipDecoder();
   var inputFS = InputFileStream("software.zip");
@@ -24,8 +23,6 @@ void clean() {
 class installer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    //throw UnimplementedError();
 
     return Scaffold(
       body: Padding(padding: const EdgeInsets.all(16.0),child: Column(
@@ -33,9 +30,6 @@ class installer extends StatelessWidget {
         children: [
           const Text("Ready to Install My Software?", style: TextStyle(color: Colors.white),),
           Expanded(child: Center(child: TextButton.icon(icon: const Icon(Icons.arrow_downward),label: const Text("Install"), onPressed: (){
-
-          //},))),
-          //IconButton(onPressed: (){
             install("C://test");
 
             showDialog(context: context, builder: (context) {
@@ -46,11 +40,6 @@ class installer extends StatelessWidget {
           //}, icon: const Icon(Icons.info))
           IconButton(onPressed: (){
             showLicensePage(context: context, applicationName: "Setask", applicationVersion: "0.1v-preAlpha"); // NOTE #L below
-           /* return;
-            Navigator.push(context, MaterialPageRoute(builder: (context){
-              //showLicensePage(context: context);
-              return LicensePage(applicationName: "Setask", applicationVersion: "0.1v-preAlpha", applicationLegalese: "By Native Bits Team",); //InfoPage(); // See info.dart for more information | and Ref #L in main.dart | calling it preAlpha may/might not be accurate | NOTE #L
-            }));*/
           }, icon: Icon(Icons.info))],
       ),
     ));
