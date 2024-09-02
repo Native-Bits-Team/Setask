@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:setask/setask_generator.dart';
 import 'package:setask/setask_installer.dart';
 
 void main() {
@@ -22,7 +23,7 @@ class MainApp extends StatelessWidget {
             textStyle: WidgetStatePropertyAll(TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             iconColor: WidgetStatePropertyAll(Colors.white60)))
         ),
-      home: installer()
+      home: GeneratorPanel()//installer()//GeneratorPanel()//installer()
       
     );
   }
